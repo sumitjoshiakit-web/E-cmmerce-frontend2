@@ -35,21 +35,24 @@ export function Login() {
 
   return (
     <div className="max-w-md mx-auto py-12 px-4">
-      <div className="bg-white rounded-3xl border border-gray-200 p-8 shadow-xs">
-        <div className="w-14 h-14 bg-gray-900 text-white rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-2xl">
+      <div className="bg-white dark:bg-gray-900 rounded-3xl border border-gray-200 dark:border-gray-800 p-8 shadow-xs transition-colors">
+        <div className="w-14 h-14 bg-gray-900 dark:bg-white text-white dark:text-gray-900 rounded-2xl flex items-center justify-center mx-auto mb-5 shadow-sm text-2xl">
           🛍️
         </div>
 
-        <h2 className="text-2xl font-bold text-gray-900 text-center tracking-tight">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-white text-center tracking-tight">
           Welcome to Shop
         </h2>
-        <p className="text-sm text-gray-500 text-center mt-1">
+        <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-1">
           Sign in to enable protected checkout and personalized order tracking.
         </p>
 
         <form onSubmit={handleLogin} className="mt-8 space-y-4">
           <div>
-            <label htmlFor="login-name" className="block text-xs font-semibold text-gray-700 uppercase tracking-wider mb-1.5">
+            <label
+              htmlFor="login-name"
+              className="block text-xs font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider mb-1.5"
+            >
               Your Name (Optional)
             </label>
             <div className="relative">
@@ -60,7 +63,7 @@ export function Login() {
                 value={customName}
                 onChange={(e) => setCustomName(e.target.value)}
                 placeholder="e.g. Alex Smith"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl pl-10 pr-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 focus:bg-white transition"
+                className="w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-gray-900 dark:text-white rounded-xl pl-10 pr-3.5 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gray-900 dark:focus:ring-white transition"
               />
             </div>
           </div>
@@ -68,7 +71,7 @@ export function Login() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full bg-gray-900 hover:bg-gray-800 disabled:opacity-60 text-white py-3 rounded-xl flex items-center justify-center gap-2 transition font-semibold text-sm active:scale-98 shadow-sm min-h-[44px]"
+            className="w-full bg-gray-900 dark:bg-white hover:bg-gray-800 dark:hover:bg-gray-100 disabled:opacity-60 text-white dark:text-gray-900 py-3 rounded-xl flex items-center justify-center gap-2 transition font-semibold text-sm active:scale-98 shadow-sm min-h-[44px]"
           >
             {isSubmitting ? (
               <>
@@ -84,7 +87,7 @@ export function Login() {
           </button>
         </form>
 
-        <div className="mt-6 pt-6 border-t border-gray-100 flex items-center justify-center gap-2 text-xs text-gray-400 text-center">
+        <div className="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 flex items-center justify-center gap-2 text-xs text-gray-400 text-center">
           <Shield className="w-3.5 h-3.5 text-emerald-600" />
           <span>Demo authentication • No password required</span>
         </div>
@@ -92,7 +95,7 @@ export function Login() {
         <div className="mt-4 text-center">
           <Link
             to="/"
-            className="inline-flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-900 transition"
+            className="inline-flex items-center gap-1.5 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             Back to Home
