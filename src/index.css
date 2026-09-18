@@ -1,0 +1,29 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Additional custom styles */
+.page-container {
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.nav-link {
+  @apply text-gray-600 font-medium px-3 py-2 rounded-lg transition hover:bg-gray-100 hover:text-gray-900;
+}
+
+.nav-link.active {
+  @apply bg-gray-100 text-gray-900;
+}
+
+.btn-outline {
+  @apply border-2 border-gray-800 text-gray-800 px-6 py-2 rounded-full font-medium hover:bg-gray-800 hover:text-white transition active:scale-95;
+}
+
+/* Hide scrollbar for clean horizontal chip navigation */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

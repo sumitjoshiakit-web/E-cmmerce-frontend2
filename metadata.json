@@ -1,0 +1,6 @@
+{
+  "name": "Shop — E-Commerce",
+  "description": "Modern React e-commerce frontend powered by DummyJSON with intelligent Client-Side AI Shopping Concierge.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
