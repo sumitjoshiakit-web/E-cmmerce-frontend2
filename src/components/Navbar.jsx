@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { ShoppingBag, User, LogOut, Menu, X, Sun, Moon } from 'lucide-react';
-import { selectTotalItems } from '../store/cartSlice';
+import { clearCart, selectTotalItems } from '../store/cartSlice';
 import { selectThemeMode, toggleTheme } from '../store/themeSlice';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
@@ -19,6 +19,8 @@ export function Navbar() {
   const isActive = (path) => location.pathname === path;
 
   const handleLogout = () => {
+    // Clear Redux cart and its localStorage persistence when the session ends.
+    dispatch(clearCart());
     logout();
     setMobileMenuOpen(false);
     toast.info('You have been logged out.');
