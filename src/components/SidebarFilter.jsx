@@ -7,7 +7,6 @@ import {
   Check,
   PackageCheck,
   X,
-  Sparkles,
 } from 'lucide-react';
 import {
   selectCategory,
@@ -34,7 +33,7 @@ export function SidebarFilter({ categories = [], totalCount = 0, isMobile = fals
   const activeFilterCount = useMemo(() => {
     let count = 0;
     if (activeCategory !== 'all') count++;
-    if (priceRange.max < 2000) count++;
+    if (priceRange.min > 0 || priceRange.max < 2000) count++;
     if (minRating > 0) count++;
     if (inStockOnly) count++;
     return count;
@@ -44,10 +43,15 @@ export function SidebarFilter({ categories = [], totalCount = 0, isMobile = fals
     dispatch(setCategory(cat));
   }, [dispatch]);
 
+  const handleMinPriceChange = useCallback((e) => {
+    const val = Number(e.target.value);
+    dispatch(setPriceRange({ min: Math.min(val, priceRange.max) }));
+  }, [dispatch, priceRange.max]);
+
   const handleMaxPriceChange = useCallback((e) => {
     const val = Number(e.target.value);
-    dispatch(setPriceRange({ min: 0, max: val }));
-  }, [dispatch]);
+    dispatch(setPriceRange({ max: Math.max(val, priceRange.min) }));
+  }, [dispatch, priceRange.min]);
 
   const handleRatingChange = useCallback((rating) => {
     dispatch(setMinRating(rating));
@@ -99,30 +103,53 @@ export function SidebarFilter({ categories = [], totalCount = 0, isMobile = fals
         </div>
       </div>
 
-      {/* 1. Price Range Slider */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between text-xs">
-          <label htmlFor="price-slider" className="font-semibold text-gray-900 dark:text-white">
-            Max Price
-          </label>
-          <span className="font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md border border-indigo-100 dark:border-indigo-900/60">
-            ${priceRange.max}
-          </span>
+      {/* 1. Minimum and Maximum Price Range */}
+      <div className="space-y-4">
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs">
+            <label htmlFor="min-price-slider" className="font-semibold text-gray-900 dark:text-white">
+              Min Price
+            </label>
+            <span className="font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md border border-indigo-100 dark:border-indigo-900/60">
+              ${priceRange.min}
+            </span>
+          </div>
+          <input
+            id="min-price-slider"
+            type="range"
+            min="0"
+            max="2000"
+            step="10"
+            value={priceRange.min}
+            onChange={handleMinPriceChange}
+            aria-label="Minimum product price"
+            className="w-full accent-gray-900 dark:accent-indigo-500 cursor-pointer h-2 bg-gray-200 dark:bg-gray-800 rounded-lg"
+          />
         </div>
 
-        <input
-          id="price-slider"
-          type="range"
-          min="10"
-          max="2000"
-          step="10"
-          value={priceRange.max}
-          onChange={handleMaxPriceChange}
-          className="w-full accent-gray-900 dark:accent-indigo-500 cursor-pointer h-2 bg-gray-200 dark:bg-gray-800 rounded-lg"
-        />
-
+        <div className="space-y-2">
+          <div className="flex items-center justify-between text-xs">
+            <label htmlFor="max-price-slider" className="font-semibold text-gray-900 dark:text-white">
+              Max Price
+            </label>
+            <span className="font-bold text-indigo-600 dark:text-indigo-400 bg-indigo-50 dark:bg-indigo-950/50 px-2 py-0.5 rounded-md border border-indigo-100 dark:border-indigo-900/60">
+              ${priceRange.max}
+            </span>
+          </div>
+          <input
+            id="max-price-slider"
+            type="range"
+            min="0"
+            max="2000"
+            step="10"
+            value={priceRange.max}
+            onChange={handleMaxPriceChange}
+            aria-label="Maximum product price"
+            className="w-full accent-gray-900 dark:accent-indigo-500 cursor-pointer h-2 bg-gray-200 dark:bg-gray-800 rounded-lg"
+          />
+        </div>
         <div className="flex justify-between text-[11px] text-gray-400">
-          <span>$10</span>
+          <span>$0</span>
           <span>$1,000</span>
           <span>$2,000</span>
         </div>
