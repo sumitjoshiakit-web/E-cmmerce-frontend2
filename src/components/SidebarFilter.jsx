@@ -37,7 +37,7 @@ export function SidebarFilter({ categories = [], totalCount = 0, isMobile = fals
     if (minRating > 0) count++;
     if (inStockOnly) count++;
     return count;
-  }, [activeCategory, priceRange.max, minRating, inStockOnly]);
+  }, [activeCategory, priceRange.min, priceRange.max, minRating, inStockOnly]);
 
   const handleCategoryChange = useCallback((cat) => {
     dispatch(setCategory(cat));
@@ -118,7 +118,7 @@ export function SidebarFilter({ categories = [], totalCount = 0, isMobile = fals
             id="min-price-slider"
             type="range"
             min="0"
-            max="2000"
+            max={priceRange.max}
             step="10"
             value={priceRange.min}
             onChange={handleMinPriceChange}
@@ -139,7 +139,7 @@ export function SidebarFilter({ categories = [], totalCount = 0, isMobile = fals
           <input
             id="max-price-slider"
             type="range"
-            min="0"
+            min={priceRange.min}
             max="2000"
             step="10"
             value={priceRange.max}
