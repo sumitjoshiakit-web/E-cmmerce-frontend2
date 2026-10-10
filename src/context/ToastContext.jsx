@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback } from 'react';
+import React, { createContext, useContext, useState, useCallback, useMemo } from 'react';
 import { CheckCircle2, AlertCircle, Info, AlertTriangle, X } from 'lucide-react';
 
 const ToastContext = createContext(null);
@@ -28,14 +28,15 @@ export function ToastProvider({ children }) {
     [removeToast]
   );
 
-  const toast = {
+  // Keep the context value stable so consumers depending on it don't refetch or re-run effects.
+  const toast = useMemo(() => ({
     success: (message, title) => addToast({ type: 'success', message, title }),
     error: (message, title) => addToast({ type: 'error', message, title }),
     info: (message, title) => addToast({ type: 'info', message, title }),
     warning: (message, title) => addToast({ type: 'warning', message, title }),
     custom: addToast,
     remove: removeToast,
-  };
+  }), [addToast, removeToast]);
 
   return (
     <ToastContext.Provider value={toast}>
