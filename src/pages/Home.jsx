@@ -36,7 +36,7 @@ export function Home() {
         <div className="relative max-w-3xl space-y-6">
           <div className="inline-flex items-center gap-2 rounded-full bg-white/10 backdrop-blur-md px-3.5 py-1.5 text-xs font-semibold text-amber-300 border border-white/10">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Redux Toolkit State & Client-Side AI Concierge</span>
+            <span>Redux Toolkit State & Smart Shopping</span>
           </div>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-[1.1]">
@@ -45,7 +45,7 @@ export function Home() {
           </h1>
 
           <p className="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed">
-            Explore quality essentials powered by Redux-managed cart & filters, real-time AI buying advice, and instant checkout.
+            Explore quality essentials with a responsive catalog, Redux-managed cart and filters, and a smooth checkout experience.
           </p>
 
           <div className="flex flex-wrap items-center gap-4 pt-2">
@@ -84,8 +84,8 @@ export function Home() {
             <Sparkles className="w-5 h-5 text-amber-500" />
           </div>
           <div>
-            <h4 className="font-bold text-sm text-gray-900 dark:text-white">AI Concierge</h4>
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Live cart & deal suggestions</p>
+            <h4 className="font-bold text-sm text-gray-900 dark:text-white">Curated Selection</h4>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Discover popular catalog items</p>
           </div>
         </div>
 
