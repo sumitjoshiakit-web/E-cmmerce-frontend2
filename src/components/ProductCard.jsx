@@ -4,11 +4,13 @@ import { useDispatch } from 'react-redux';
 import { Star, ShoppingBag, Check, Loader2 } from 'lucide-react';
 import { addItem } from '../store/cartSlice';
 import { useToast } from '../context/ToastContext';
+import { useAuth } from '../context/AuthContext';
 
 export const ProductCard = memo(function ProductCard({ product }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = useToast();
+  const { isAuthenticated } = useAuth();
   const [isAdding, setIsAdding] = useState(false);
   const [addedRecently, setAddedRecently] = useState(false);
   const [imgSrc, setImgSrc] = useState(product.thumbnail);
@@ -17,6 +19,11 @@ export const ProductCard = memo(function ProductCard({ product }) {
     (event) => {
       event.stopPropagation();
       if (isAdding) return;
+      if (!isAuthenticated) {
+        toast.info('Please sign in before adding items to your cart.');
+        navigate('/login', { state: { from: { pathname: window.location.pathname } } });
+        return;
+      }
 
       setIsAdding(true);
       setTimeout(() => {
@@ -28,7 +35,7 @@ export const ProductCard = memo(function ProductCard({ product }) {
         setTimeout(() => setAddedRecently(false), 1800);
       }, 200);
     },
-    [isAdding, product, dispatch, toast]
+    [isAdding, product, dispatch, toast, isAuthenticated, navigate]
   );
 
   const discount = product.discountPercentage
