@@ -19,12 +19,14 @@ import { fetchProductById } from '../utils/api';
 import { addItem } from '../store/cartSlice';
 import { useToast } from '../context/ToastContext';
 import { generateProductAdvice } from '../utils/ai';
+import { useAuth } from '../context/AuthContext';
 
 export function ProductDetail() {
   const { id } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const toast = useToast();
+  const { isAuthenticated } = useAuth();
 
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -53,6 +55,11 @@ export function ProductDetail() {
 
   const handleAddToCart = () => {
     if (!product || isAdding) return;
+    if (!isAuthenticated) {
+      toast.info('Please sign in before adding items to your cart.');
+      navigate('/login', { state: { from: { pathname: `/product/${id}` } } });
+      return;
+    }
     setIsAdding(true);
     setTimeout(() => {
       // Redux action dispatch
@@ -265,7 +272,13 @@ export function ProductDetail() {
             <button
               type="button"
               onClick={() => {
-                handleAddToCart();
+                if (!isAuthenticated) {
+                  toast.info('Please sign in before purchasing.');
+                  navigate('/login', { state: { from: { pathname: `/product/${id}` } } });
+                  return;
+                }
+                if (!product || isAdding) return;
+                dispatch(addItem({ product, quantity }));
                 navigate('/checkout');
               }}
               className="w-full bg-emerald-600 text-white font-semibold py-3 px-6 rounded-xl hover:bg-emerald-700 transition active:scale-95 min-h-[44px] shadow-sm text-center"
