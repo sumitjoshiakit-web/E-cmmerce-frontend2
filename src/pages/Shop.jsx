@@ -116,7 +116,7 @@ export function Shop() {
     }
 
     return list;
-  }, [products, searchQuery, selectedCategory, priceRange.max, minRating, inStockOnly, sortBy]);
+  }, [products, searchQuery, selectedCategory, priceRange.min, priceRange.max, minRating, inStockOnly, sortBy]);
 
   const activeFilterCount = useMemo(() => {
     let count = 0;
@@ -126,7 +126,7 @@ export function Shop() {
     if (minRating > 0) count++;
     if (inStockOnly) count++;
     return count;
-  }, [searchQuery, selectedCategory, priceRange.max, minRating, inStockOnly]);
+  }, [searchQuery, selectedCategory, priceRange.min, priceRange.max, minRating, inStockOnly]);
 
   const handleSearchChange = useCallback((e) => {
     dispatch(setSearchQuery(e.target.value));
