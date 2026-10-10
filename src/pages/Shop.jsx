@@ -86,7 +86,10 @@ export function Shop() {
       list = list.filter((p) => p.category === selectedCategory);
     }
 
-    // 3. Price Range (Max Price Slider)
+    // 3. Price Range (minimum and maximum)
+    if (priceRange?.min > 0) {
+      list = list.filter((p) => Number(p.price) >= priceRange.min);
+    }
     if (priceRange?.max) {
       list = list.filter((p) => Number(p.price) <= priceRange.max);
     }
@@ -119,7 +122,7 @@ export function Shop() {
     let count = 0;
     if (searchQuery.trim()) count++;
     if (selectedCategory !== 'all') count++;
-    if (priceRange.max < 2000) count++;
+    if (priceRange.min > 0 || priceRange.max < 2000) count++;
     if (minRating > 0) count++;
     if (inStockOnly) count++;
     return count;
