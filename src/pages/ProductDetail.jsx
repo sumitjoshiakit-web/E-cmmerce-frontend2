@@ -5,12 +5,9 @@ import {
   Star,
   ShoppingBag,
   ArrowLeft,
-  Check,
   Truck,
   ShieldCheck,
-  Sparkles,
   Loader2,
-  ThumbsUp,
   AlertCircle,
   Plus,
   Minus,
@@ -18,7 +15,6 @@ import {
 import { fetchProductById } from '../utils/api';
 import { addItem } from '../store/cartSlice';
 import { useToast } from '../context/ToastContext';
-import { generateProductAdvice } from '../utils/ai';
 import { useAuth } from '../context/AuthContext';
 
 export function ProductDetail() {
@@ -33,14 +29,11 @@ export function ProductDetail() {
   const [error, setError] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const [isAdding, setIsAdding] = useState(false);
-  const [aiAdvice, setAiAdvice] = useState(null);
-  const [loadingAi, setLoadingAi] = useState(false);
   const [selectedImg, setSelectedImg] = useState('');
 
   useEffect(() => {
     setLoading(true);
     setError(null);
-    setAiAdvice(null);
     fetchProductById(id)
       .then((data) => {
         setProduct(data);
@@ -67,21 +60,6 @@ export function ProductDetail() {
       setIsAdding(false);
       toast.success(`Added ${quantity} × "${product.title}" to your cart!`);
     }, 200);
-  };
-
-  const handleGenerateAiAdvice = async () => {
-    if (!product || loadingAi) return;
-    setLoadingAi(true);
-    try {
-      const advice = await generateProductAdvice(product);
-      setAiAdvice(advice);
-      toast.info('AI Buying Advice generated!');
-    } catch (err) {
-      console.error('AI Advice generation failed:', err);
-      toast.error('Failed to generate AI advice.');
-    } finally {
-      setLoadingAi(false);
-    }
   };
 
   if (loading) {
@@ -301,92 +279,6 @@ export function ProductDetail() {
         </div>
       </div>
 
-      {/* AI Buying Advice & Review Summary Section */}
-      <div className="bg-gradient-to-br from-indigo-50/70 to-purple-50/70 dark:from-indigo-950/40 dark:to-purple-950/40 rounded-3xl border border-indigo-100 dark:border-indigo-900/60 p-6 md:p-8">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-200 dark:shadow-none">
-              <Sparkles className="w-5 h-5 text-amber-300" />
-            </div>
-            <div>
-              <h3 className="font-bold text-gray-900 dark:text-white text-lg">AI Shopping Intelligence</h3>
-              <p className="text-xs text-gray-600 dark:text-gray-300">
-                Analyze reviews, stock reliability, and value proposition with client-side AI.
-              </p>
-            </div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleGenerateAiAdvice}
-            disabled={loadingAi}
-            className="inline-flex items-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2.5 rounded-xl transition shadow-sm active:scale-95 disabled:opacity-50"
-          >
-            {loadingAi ? (
-              <>
-                <Loader2 className="w-4 h-4 animate-spin" />
-                <span>Analyzing Product...</span>
-              </>
-            ) : (
-              <>
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>{aiAdvice ? 'Regenerate Analysis' : 'Generate AI Advice'}</span>
-              </>
-            )}
-          </button>
-        </div>
-
-        {/* AI Results Display */}
-        {aiAdvice && (
-          <div className="mt-6 pt-6 border-t border-indigo-100/80 dark:border-indigo-900/60 space-y-4 animate-in fade-in duration-300">
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-1.5 bg-indigo-100 dark:bg-indigo-900/60 text-indigo-900 dark:text-indigo-200 text-xs font-bold px-3 py-1 rounded-full">
-                <Check className="w-3.5 h-3.5 text-indigo-700 dark:text-indigo-300" />
-                Verdict: {aiAdvice.verdict}
-              </span>
-              <span className="text-xs font-semibold text-gray-600 dark:text-gray-300">
-                Value Score: <strong className="text-indigo-600 dark:text-indigo-400">{aiAdvice.valueScore}/100</strong>
-              </span>
-            </div>
-
-            <p className="text-sm text-gray-700 dark:text-gray-200 leading-relaxed font-medium">
-              {aiAdvice.summary}
-            </p>
-
-            <div className="grid sm:grid-cols-2 gap-4 pt-2">
-              {/* Pros */}
-              <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-4 border border-emerald-100 dark:border-emerald-900/50">
-                <h4 className="text-xs font-bold text-emerald-800 dark:text-emerald-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <ThumbsUp className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> Key Highlights
-                </h4>
-                <ul className="space-y-1.5 text-xs text-gray-600 dark:text-gray-300">
-                  {aiAdvice.pros?.map((pro, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-emerald-500 font-bold">•</span>
-                      <span>{pro}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Cons */}
-              <div className="bg-white/80 dark:bg-gray-800/80 rounded-2xl p-4 border border-amber-100 dark:border-amber-900/50">
-                <h4 className="text-xs font-bold text-amber-800 dark:text-amber-300 uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  <AlertCircle className="w-3.5 h-3.5 text-amber-600 dark:text-amber-400" /> Things to Note
-                </h4>
-                <ul className="space-y-1.5 text-xs text-gray-600 dark:text-gray-300">
-                  {aiAdvice.cons?.map((con, i) => (
-                    <li key={i} className="flex items-start gap-1.5">
-                      <span className="text-amber-500 font-bold">•</span>
-                      <span>{con}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
     </div>
   );
 }

@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { AuthProvider } from './context/AuthContext';
 import { ToastProvider } from './context/ToastContext';
 import { Navbar } from './components/Navbar';
-import { AIAssistant } from './components/AIAssistant';
 import { ProtectedRoute } from './components/ProtectedRoute';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { selectThemeMode } from './store/themeSlice';
@@ -55,7 +54,6 @@ function Layout({ children }) {
           </div>
         </div>
       </footer>
-      <AIAssistant />
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import {
@@ -6,7 +6,6 @@ import {
   Plus,
   Minus,
   ShoppingBag,
-  Sparkles,
   ArrowLeft,
   CheckCircle2,
   ShieldCheck,
@@ -14,7 +13,6 @@ import {
   Loader2,
   CreditCard,
   Building,
-  RotateCcw,
 } from 'lucide-react';
 import {
   selectCartItems,
@@ -26,7 +24,6 @@ import {
 } from '../store/cartSlice';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { generateCartSummary } from '../utils/ai';
 
 export function Checkout() {
   const dispatch = useDispatch();
@@ -48,29 +45,6 @@ export function Checkout() {
     postalCode: '94103',
   });
   const [paymentMethod, setPaymentMethod] = useState('card');
-
-  // AI Cart Summary State
-  const [aiSummary, setAiSummary] = useState(null);
-  const [isAiLoading, setIsAiLoading] = useState(false);
-
-  const handleGenerateAiSummary = useCallback(async () => {
-    if (items.length === 0) return;
-    setIsAiLoading(true);
-    try {
-      const summary = await generateCartSummary(items, totalPrice, user);
-      setAiSummary(summary);
-    } catch (err) {
-      console.warn('AI Cart Summary failed:', err);
-    } finally {
-      setIsAiLoading(false);
-    }
-  }, [items, totalPrice, user]);
-
-  useEffect(() => {
-    if (items.length > 0) {
-      handleGenerateAiSummary();
-    }
-  }, [items.length, handleGenerateAiSummary]);
 
   const handleUpdateQty = (id, newQty, title) => {
     dispatch(updateQuantity({ id, quantity: newQty }));
@@ -223,7 +197,7 @@ export function Checkout() {
         </button>
       </div>
 
-      {/* Grid: Cart Items (Left) vs. AI Summary & Order Checkout (Right) */}
+      {/* Grid: Cart Items (Left) vs. Order Checkout (Right) */}
       <div className="grid lg:grid-cols-[1fr_380px] gap-8 items-start">
         {/* Left Column: Cart Items List */}
         <div className="space-y-4">
@@ -300,61 +274,6 @@ export function Checkout() {
             </article>
           ))}
 
-          {/* AI Cart Summary & Savings Advisor Card */}
-          <div className="bg-gradient-to-br from-purple-50/70 to-indigo-50/70 dark:from-purple-950/40 dark:to-indigo-950/40 rounded-2xl border border-purple-100 dark:border-purple-900/50 p-5 shadow-xs">
-            <div className="flex items-center justify-between gap-3 mb-3">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-xl bg-purple-600 text-white flex items-center justify-center shadow-xs">
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                </div>
-                <div>
-                  <h4 className="font-bold text-gray-900 dark:text-white text-sm">
-                    AI Cart Summary & Advisor
-                  </h4>
-                  <p className="text-[11px] text-gray-500 dark:text-gray-400">Live order value optimization</p>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={handleGenerateAiSummary}
-                disabled={isAiLoading}
-                className="text-xs text-purple-700 dark:text-purple-300 hover:text-purple-900 font-semibold flex items-center gap-1 bg-white dark:bg-gray-800 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800 shadow-2xs hover:bg-purple-50 dark:hover:bg-gray-700 transition"
-              >
-                {isAiLoading ? (
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                ) : (
-                  <RotateCcw className="w-3.5 h-3.5" />
-                )}
-                <span>Refresh Insights</span>
-              </button>
-            </div>
-
-            {isAiLoading ? (
-              <div className="py-4 flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
-                <Loader2 className="w-4 h-4 animate-spin text-purple-600" />
-                <span>Analyzing cart bundle & potential savings...</span>
-              </div>
-            ) : aiSummary ? (
-              <div className="space-y-3 text-xs text-gray-700 dark:text-gray-300">
-                <p className="leading-relaxed font-medium">{aiSummary.overview}</p>
-                <div className="bg-white/80 dark:bg-gray-800/80 rounded-xl p-3 border border-purple-100 dark:border-purple-900/50">
-                  <span className="font-bold text-purple-900 dark:text-purple-300 block mb-1">
-                    Savings Advisor:
-                  </span>
-                  <p className="text-gray-600 dark:text-gray-300">{aiSummary.savingTips}</p>
-                </div>
-                {aiSummary.dealScore > 0 && (
-                  <div className="flex items-center justify-between text-gray-600 dark:text-gray-400 pt-1">
-                    <span>Bundle Value Score:</span>
-                    <span className="font-bold text-emerald-700 dark:text-emerald-300 bg-emerald-50 dark:bg-emerald-950/40 px-2 py-0.5 rounded-full border border-emerald-200 dark:border-emerald-800">
-                      {aiSummary.dealScore}/100 High Value
-                    </span>
-                  </div>
-                )}
-              </div>
-            ) : null}
-          </div>
         </div>
 
         {/* Right Column: Checkout Form & Summary */}
